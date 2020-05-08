@@ -26,7 +26,10 @@ begin
 	Sum := Num1 + Num2; {addition}
     a := int[3];
     a[0] = 1;
-    a[1] = 3 * (2 + 1);
+    a[1] = 3 * (2
+           + (1 + 4)
+            );
+    a[2] = 8;
 	Writeln(Sum);
 	Readln;
 end
