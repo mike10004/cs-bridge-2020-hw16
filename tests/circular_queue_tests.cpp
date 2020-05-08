@@ -1,5 +1,5 @@
 #include <catch.hpp>
-#include "../q2/mac937_queue.h"
+#include "../q2/mac937_hw16_queue.h"
 
 TEST_CASE("CircularQueue_push_one") {
     VectorQueue<int> queue(true);

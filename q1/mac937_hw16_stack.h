@@ -1,5 +1,5 @@
-#ifndef HW16_MAC937_STACK_H
-#define HW16_MAC937_STACK_H
+#ifndef HW16_MAC937_HW16_STACK_H
+#define HW16_MAC937_HW16_STACK_H
 
 #include <cassert>
 #include <vector>
@@ -106,4 +106,4 @@ Stack<T>::Stack(Stack<T> &other) {
 }
 
 
-#endif //HW16_MAC937_STACK_H
+#endif //HW16_MAC937_HW16_STACK_H

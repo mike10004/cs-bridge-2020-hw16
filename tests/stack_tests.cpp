@@ -1,5 +1,5 @@
 #include <catch.hpp>
-#include "../q1/mac937_stack.h"
+#include "../q1/mac937_hw16_stack.h"
 
 TEST_CASE("Stack_push_one") {
     Stack<int> stack;

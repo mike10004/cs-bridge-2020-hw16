@@ -6,7 +6,7 @@
 #include <fstream>
 #endif                  // stage: cut
 #include <string>
-#include "mac937_stack.h"
+#include "mac937_hw16_stack.h"
 
 using string = std::string;
 
