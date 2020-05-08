@@ -10,7 +10,7 @@ TEST_CASE("Queue_push_one") {
     REQUIRE(count == 1);
     int val = queue.Front();
     REQUIRE(1 == val);
-    val = queue.Pop();
+    val = queue.Dequeue();
     REQUIRE(1 == val);
     count = queue.Count();
     REQUIRE(count == 0);
@@ -23,7 +23,7 @@ TEST_CASE("Queue__IsPacked") {
     queue.Push('a');
     queue.Push('b');
     REQUIRE(queue.GetVectorSize() == queue.Count());
-    queue.Pop();
+    queue.Dequeue();
     REQUIRE_FALSE(queue.GetVectorSize() == queue.Count());
 }
 
@@ -41,17 +41,25 @@ TEST_CASE("Queue_push_two") {
     queue.Push(1);
     queue.Push(2);
     queue.Push(3);
-    int val = queue.Pop();
+    int val = queue.Dequeue();
     REQUIRE(1 == val);
     REQUIRE_FALSE(queue.IsEmpty());
-    val = queue.Pop();
+    val = queue.Dequeue();
     REQUIRE(2 == val);
     REQUIRE_FALSE(queue.IsEmpty());
-    queue.Pop();
+    queue.Dequeue();
     REQUIRE(queue.IsEmpty());
-    bool valid = true;
-    queue.Pop(valid);
-    REQUIRE_FALSE(valid);
+    bool popped = queue.Pop();
+    REQUIRE_FALSE(popped);
+}
+
+TEST_CASE("Queue_pop") {
+    VectorQueue<char> q;
+    q.Push('a');
+    REQUIRE(q.Pop());
+    REQUIRE(q.IsEmpty());
+    REQUIRE_FALSE(q.Pop());
+
 }
 
 TEST_CASE("Queue_CopyToVector") {
@@ -59,7 +67,7 @@ TEST_CASE("Queue_CopyToVector") {
     queue.Push(1);
     queue.Push(2);
     queue.Push(3);
-    queue.Pop();
+    queue.Dequeue();
     std::vector<int> expected({2, 3});
     std::vector<int> actual = queue.CopyToVector();
     REQUIRE(expected == actual);
@@ -70,7 +78,7 @@ TEST_CASE("Queue_useUnusedSlots") {
     queue.Push('a');
     queue.Push('b');                    // a b
     REQUIRE(2 == queue.Count());
-    REQUIRE('a' == queue.Pop());           // _ b
+    REQUIRE('a' == queue.Dequeue());           // _ b
     REQUIRE(1 == queue.Count());
     std::vector<char> expected({'b'});
     REQUIRE(expected == queue.CopyToVector());
@@ -79,12 +87,12 @@ TEST_CASE("Queue_useUnusedSlots") {
     REQUIRE(expected == queue.CopyToVector());
     REQUIRE(2 == queue.GetVectorSize());
     REQUIRE(2 == queue.Count());
-    REQUIRE('b' == queue.Pop());           // c _
+    REQUIRE('b' == queue.Dequeue());           // c _
     REQUIRE(1 == queue.Count());
     queue.Push('d');                    // c d
     REQUIRE(2 == queue.GetVectorSize());
     REQUIRE(2 == queue.Count());
-    REQUIRE('c' == queue.Pop());           // _ d
+    REQUIRE('c' == queue.Dequeue());           // _ d
     REQUIRE(1 == queue.Count());
     queue.Push('e');                    // e d
     REQUIRE(2 == queue.GetVectorSize());

@@ -11,16 +11,16 @@ int main() {
     queue.Push(1);
     queue.Push(2);
     queue.Push(3);
-    int val = queue.Pop();
+    int val = queue.Dequeue();
     assert(1 == val);
     assert(!queue.IsEmpty());
-    val = queue.Pop();
+    val = queue.Dequeue();
     assert(2 == val);
     assert(!queue.IsEmpty());
-    queue.Pop();
+    queue.Dequeue();
     assert(queue.IsEmpty());
     bool valid = true;
-    queue.Pop(valid);
+    queue.Dequeue(valid);
     assert(!valid);
     return 0;
 }

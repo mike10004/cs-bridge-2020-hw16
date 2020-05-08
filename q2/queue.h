@@ -18,26 +18,25 @@ public:
      * Constructs an instance.
      */
     VectorQueue() : elements_(), start_(0), last_(0), count_(0) {}
+
     /**
-     * Adds an element to the queue.
+     * Adds an element to the back of the queue.
      * @param element element
      */
     void Push(const T& element);
 
     /**
-     * Removes an element from the queue.
-     * @param valid flag that indicates whether removal succeeded; if queue is empty, this will be set to false
-     * @return the first element in the queue, or if the queue is empty,
-     * a value constructed with the default construct of the element type
+     * Removes an element from the front of the queue.
+     * @return true if queue was not empty and element was popped; false if queue was empty
      */
-    T Pop(bool& valid);
+    bool Pop();
 
     /**
-     * Removes an element from the queue.
+     * Removes an element from the queue and returns it.
      * @return the first element in the queue, or if the queue is empty,
      * a value constructed with the default construct of the element type
      */
-    T Pop();
+    T Dequeue();
 
     /**
      * Returns a copy of the element at the front of the queue,
@@ -107,16 +106,22 @@ void VectorQueue<T>::Push(const T &element) {
 }
 
 template<class T>
-T VectorQueue<T>::Pop(bool &valid) {
-    if (IsEmpty()) {
-        valid = false;
-        return T();
-    }
-    T first = elements_[start_];
-    start_ = (start_ + 1) % elements_.size();
-    count_--;
-    MaybeResize();
+T VectorQueue<T>::Dequeue() {
+    T first = Front();
+    Pop();
     return first;
+}
+
+template <class T>
+bool VectorQueue<T>::Pop() {
+    if (!IsEmpty()) {
+        start_ = (start_ + 1) % elements_.size();
+        count_--;
+        MaybeResize();
+        return true;
+    } else {
+        return false;
+    }
 }
 
 template<class T>
@@ -162,12 +167,6 @@ void VectorQueue<T>::MaybeResize() {
         start_ = 0;
         last_ = 0;
     }
-}
-
-template<class T>
-T VectorQueue<T>::Pop() {
-    bool unused;
-    return Pop(unused);
 }
 
 template<class T>
