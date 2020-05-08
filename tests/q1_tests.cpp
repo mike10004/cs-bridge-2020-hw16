@@ -34,6 +34,22 @@ end
     REQUIRE(CheckProgram(text));
 }
 
+TEST_CASE("NestedBeginEnd") {
+    istringstream text(R"(begin
+a := 1
+b := 2
+c := (a + b)
+d := (a - b) {subtraction}
+begin
+  some loop
+  e := arr[(a + 1)]
+end
+f := 1
+end
+)");
+    REQUIRE(CheckProgram(text));
+}
+
 TEST_CASE("check_program_bad1") {
     istringstream text(R"(
 begin
