@@ -25,9 +25,10 @@ public:
     bool IsEmpty() const;
     std::vector<T> CopyToVector() const;
     Stack(Stack<T>& other);
+    Stack<T>& operator=(const Stack<T>& other);
 private:
     StackNode<T>* top_;
-    Stack<T>& operator=(const Stack<T>& other);
+    StackNode<T>* Clone(const StackNode<T>* node) const;
 };
 
 template<class T>
@@ -90,19 +91,21 @@ Stack<T>& Stack<T>::operator=(const Stack<T>& other) {
         return *this;
     }
     Clear();
-    Stack<T> temp;
-    for (StackNode<T>* current = other.top_; current != nullptr; current = current->under) {
-        temp.Push(current->content);
-    }
-    for (StackNode<T>* current = temp.top_; current != nullptr; current = current->under) {
-        Push(current->content);
-    }
+    top_ = Clone(other.top_);
     return *this;
 }
 
 template<class T>
 Stack<T>::Stack(Stack<T> &other) {
     *this = other;
+}
+
+template<class T>
+StackNode<T> *Stack<T>::Clone(const StackNode<T> *node) const {
+    if (node == nullptr) {
+        return nullptr;
+    }
+    return new StackNode<T>(node->content, Clone(node->under));
 }
 
 
