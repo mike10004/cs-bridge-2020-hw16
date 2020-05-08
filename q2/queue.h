@@ -17,7 +17,7 @@ public:
     /**
      * Constructs an instance.
      */
-    VectorQueue() : elements_(), start_(0), last_(0), count_(0) {}
+    VectorQueue() : elements_(), front_(0), back_(0), count_(0) {}
 
     /**
      * Adds an element to the back of the queue.
@@ -65,8 +65,8 @@ public:
 
 private:
     std::vector<T> elements_;
-    size_t start_;
-    size_t last_;
+    size_t front_;
+    size_t back_;
     size_t count_;
     /**
      * Compacts the vector used to store queue elements if this queue is empty.
@@ -96,12 +96,12 @@ void VectorQueue<T>::Push(const T &element) {
         NormalizeOrder();
         elements_.push_back(element);
     } else {
-        if (last_ == elements_.size()) {
-            last_ = 0;
+        if (back_ == elements_.size()) {
+            back_ = 0;
         }
-        elements_[last_] = element;
+        elements_[back_] = element;
     }
-    last_ = (last_ + 1) % elements_.size();
+    back_ = (back_ + 1) % elements_.size();
     count_++;
 }
 
@@ -115,7 +115,7 @@ T VectorQueue<T>::Dequeue() {
 template <class T>
 bool VectorQueue<T>::Pop() {
     if (!IsEmpty()) {
-        start_ = (start_ + 1) % elements_.size();
+        front_ = (front_ + 1) % elements_.size();
         count_--;
         MaybeResize();
         return true;
@@ -127,8 +127,8 @@ bool VectorQueue<T>::Pop() {
 template<class T>
 void VectorQueue<T>::Clear() {
     elements_.clear();
-    start_ = 0;
-    last_ = 0;
+    front_ = 0;
+    back_ = 0;
     count_ = 0;
     MaybeResize();
 }
@@ -142,11 +142,11 @@ template<class T>
 std::vector<T> VectorQueue<T>::CopyToVector() const {
     std::vector<T> copy;
     copy.reserve(Count());
-    for (size_t index = start_; index < elements_.size(); index++) {
+    for (size_t index = front_; index < elements_.size(); index++) {
         copy.push_back(elements_[index]);
     }
-    if (last_ <= start_) {
-        for (size_t index = 0; index < last_; index++) {
+    if (back_ <= front_) {
+        for (size_t index = 0; index < back_; index++) {
             copy.push_back(elements_[index]);
         }
     }
@@ -164,8 +164,8 @@ void VectorQueue<T>::MaybeResize() {
         elements_.clear();
         elements_.shrink_to_fit();
         elements_.reserve(VECTOR_QUEUE_RESET_CAPACITY);
-        start_ = 0;
-        last_ = 0;
+        front_ = 0;
+        back_ = 0;
     }
 }
 
@@ -176,11 +176,11 @@ size_t VectorQueue<T>::GetVectorSize() const {
 
 template<class T>
 void VectorQueue<T>::NormalizeOrder() {
-    if (!IsEmpty() && last_ <= start_) {
+    if (!IsEmpty() && back_ <= front_) {
         std::vector<T> new_vector = CopyToVector();
         elements_ = new_vector;
-        start_ = 0;
-        last_ = elements_.size();
+        front_ = 0;
+        back_ = elements_.size();
     }
 }
 
@@ -189,7 +189,7 @@ T VectorQueue<T>::Front() const {
     if (IsEmpty()) {
         return T();
     }
-    T first = elements_[start_];
+    T first = elements_[front_];
 }
 
 #endif //HW16_QUEUE_H
