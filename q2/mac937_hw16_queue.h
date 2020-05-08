@@ -37,12 +37,15 @@ public:
 
     /**
      * Removes an element from the front of the queue.
+     * If the queue becomes empty, the underlying vector will
+     * have its capacity shrunk to a default size.
      * @return true if queue was not empty and element was popped; false if queue was empty
      */
     bool Pop();
 
     /**
      * Removes an element from the queue and returns it.
+     * This is equivalent to calling Front() and Pop().
      * @return the first element in the queue, or if the queue is empty,
      * a value constructed with the default construct of the element type
      */
@@ -57,7 +60,9 @@ public:
     T Front() const;
 
     /**
-     * Removes all elements from the queue.
+     * Removes all elements from the queue. This causes the underlying
+     * vector to shrink its capacity, if the queue was not previously
+     * empty.
      */
     void Clear();
 
@@ -68,21 +73,40 @@ public:
     bool IsEmpty() const;
 
     /**
-     * Get the queue size.
-     * @return queue size
+     * Gets the queue size.
+     * @return number of elements in queue
      */
     size_t Count() const;
 
 private:
     bool circular_;
     std::vector<T> elements_;
+
+    /**
+     * Index of the vector element at the front of the queue.
+     */
     size_t front_;
+
+    /**
+     * Index of the next vector position into which an element will be placed.
+     */
     size_t back_;
     size_t count_;
+
     /**
      * Compacts the vector used to store queue elements if this queue is empty.
      */
     void MaybeResize();
+
+    /**
+     * Normalizes the order of elements in the underyling vector. This is
+     * only called if this queue is circular, and it only has effect if the
+     * queue elements have wrapped around from the last position in the vector
+     * to the first.
+     * If that is the case, then the elements of the vector are reordered
+     * such that the first position in the vector is the front of the queue
+     * and the last position in the vector is the back of the queue.
+     */
     void NormalizeOrder();
 public: // stage: cut
     /**
@@ -156,7 +180,7 @@ bool VectorQueue<T>::IsEmpty() const {
 template<class T>
 std::vector<T> VectorQueue<T>::CopyToVector() const {
     std::vector<T> copy;
-    copy.reserve(Count());
+    copy.reserve(count_);
     for (size_t index = front_; index < elements_.size(); index++) {
         copy.push_back(elements_[index]);
     }
@@ -205,6 +229,7 @@ T VectorQueue<T>::Front() const {
         return T();
     }
     T first = elements_[front_];
+    return first;
 }
 
 #endif //HW16_MAC937_HW16_QUEUE_H
