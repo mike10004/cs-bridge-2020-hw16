@@ -11,8 +11,6 @@ public:
     StackNode(const T& content, StackNode<T>* under) : content(content), under(under) {}
     T content;
     StackNode<T>* under;
-private:
-    StackNode(const StackNode<T>& other);
 };
 
 template<class T>
@@ -26,9 +24,10 @@ public:
     void Clear();
     bool IsEmpty() const;
     std::vector<T> CopyToVector() const;
+    Stack(Stack<T>& other);
 private:
     StackNode<T>* top_;
-    Stack(Stack<T>& other);
+    Stack<T>& operator=(const Stack<T>& other);
 };
 
 template<class T>
@@ -83,6 +82,27 @@ std::vector<T> Stack<T>::CopyToVector() const {
         items.push_back(current->content);
     }
     return items;
+}
+
+template <class T>
+Stack<T>& Stack<T>::operator=(const Stack<T>& other) {
+    if (this == &other) {
+        return *this;
+    }
+    Clear();
+    Stack<T> temp;
+    for (StackNode<T>* current = other.top_; current != nullptr; current = current->under) {
+        temp.Push(current->content);
+    }
+    for (StackNode<T>* current = temp.top_; current != nullptr; current = current->under) {
+        Push(current->content);
+    }
+    return *this;
+}
+
+template<class T>
+Stack<T>::Stack(Stack<T> &other) {
+    *this = other;
 }
 
 

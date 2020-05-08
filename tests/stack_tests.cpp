@@ -55,3 +55,30 @@ TEST_CASE("Stack_CopyToVector") {
     std::vector<int> actual = stack.CopyToVector();
     REQUIRE(expected == actual);
 }
+
+TEST_CASE("Stack_CopyConstructor") {
+    Stack<int> stack;
+    stack.Push(1);
+    stack.Push(2);
+    stack.Push(3);
+    stack.Pop();
+    stack.Push(4);
+    std::vector<int> expected = stack.CopyToVector();
+    Stack<int> copy(stack);
+    std::vector<int> actual = copy.CopyToVector();
+    REQUIRE(expected == actual);
+}
+
+TEST_CASE("Stack_AssignmentOperator") {
+    Stack<int> stack;
+    stack.Push(1);
+    stack.Push(2);
+    stack.Push(3);
+    stack.Pop();
+    stack.Push(4);
+    std::vector<int> expected = stack.CopyToVector();
+    Stack<int> copy = stack;
+    std::vector<int> actual = copy.CopyToVector();
+    REQUIRE(expected == actual);
+}
+
