@@ -1,4 +1,4 @@
-// mchaberski@novetta.com
+// mac937@nyu.edu
 // hw16 question 1
 
 #ifndef UNIT_TESTS     // stage: cut

@@ -1,4 +1,4 @@
-// mchaberski@novetta.com
+// mac937@nyu.edu
 // hw16 question 2
 
 #include <cassert>
