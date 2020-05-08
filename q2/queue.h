@@ -84,12 +84,6 @@ public: // stage: cut
     size_t GetVectorSize() const;
 
     /**
-     * Returns true if the size of the vector is equal to the queue size.
-     * @return true if packed
-     */
-    bool IsPacked() const;
-
-    /**
      * Copies this queue to a vector.
      * @return a vector
      */
@@ -99,7 +93,7 @@ public: // stage: cut
 
 template<class T>
 void VectorQueue<T>::Push(const T &element) {
-    if (IsPacked()) {
+    if (GetVectorSize() == count_) {
         NormalizeOrder();
         elements_.push_back(element);
     } else {
@@ -174,11 +168,6 @@ template<class T>
 T VectorQueue<T>::Pop() {
     bool unused;
     return Pop(unused);
-}
-
-template<class T>
-bool VectorQueue<T>::IsPacked() const {
-    return GetVectorSize() == Count();
 }
 
 template<class T>

@@ -19,12 +19,12 @@ TEST_CASE("Queue_push_one") {
 
 TEST_CASE("Queue__IsPacked") {
     VectorQueue<char> queue;
-    REQUIRE(queue.IsPacked());
+    REQUIRE(queue.GetVectorSize() == queue.Count());
     queue.Push('a');
     queue.Push('b');
-    REQUIRE(queue.IsPacked());
+    REQUIRE(queue.GetVectorSize() == queue.Count());
     queue.Pop();
-    REQUIRE_FALSE(queue.IsPacked());
+    REQUIRE_FALSE(queue.GetVectorSize() == queue.Count());
 }
 
 TEST_CASE("Queue_Clear") {
