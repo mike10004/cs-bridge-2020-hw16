@@ -1,6 +1,6 @@
 add_definitions(-DUNIT_TESTS)
 add_executable(hw16_testsNew
-        ../q1/stack.h
+        ../q1/mac937_stack.h
         ../q1/main.cpp
         stack_tests.cpp
         queue_tests.cpp

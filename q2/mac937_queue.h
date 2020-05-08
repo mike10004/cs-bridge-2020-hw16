@@ -1,5 +1,5 @@
-#ifndef HW16_QUEUE_H
-#define HW16_QUEUE_H
+#ifndef HW16_MAC937_QUEUE_H
+#define HW16_MAC937_QUEUE_H
 
 #include <vector>
 #include <cassert>
@@ -207,4 +207,4 @@ T VectorQueue<T>::Front() const {
     T first = elements_[front_];
 }
 
-#endif //HW16_QUEUE_H
+#endif //HW16_MAC937_QUEUE_H
