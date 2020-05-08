@@ -1,9 +1,11 @@
 // mchaberski@novetta.com
 // hw16 question 1
 
-#include <string>
+#ifndef UNIT_TESTS     // stage: cut
 #include <iostream>
 #include <fstream>
+#endif                  // stage: cut
+#include <string>
 #include "stack.h"
 
 using string = std::string;
@@ -62,15 +64,35 @@ bool CheckCloser(int closer, Stack<int>& openers) {
     return IsPair(opener, closer);
 }
 
+void Trim(const std::string& s, size_t& start, size_t& len) {
+    start = 0;
+    size_t end_exclusive = s.length();
+    while (start < s.length() && std::isspace(s[start])) {
+        start++;
+    }
+    while (end_exclusive > 0 && std::isspace(s[end_exclusive - 1])) {
+        end_exclusive--;
+    }
+    len = end_exclusive - start;
+}
+
+bool TrimmedEquals(const std::string& a, const std::string& b) {
+    size_t a_start, a_len;
+    Trim(a, a_start, a_len);
+    size_t b_start, b_len;
+    Trim(b, b_start, b_len);
+    return a.compare(a_start, a_len, b, b_start, b_len) == 0;
+}
+
 bool CheckProgram(std::istream& input_stream) {
     Stack<int> openers;
     while (input_stream) {
         string line;
         getline(input_stream, line);
-        if (line == "begin") {
+        if (TrimmedEquals(line, "begin")) {
             openers.Push(BEGIN);
         }
-        if (line == "end") {
+        if (TrimmedEquals(line, "end")) {
             bool ok = CheckCloser(END, openers);
             if (!ok) {
                 return false;
