@@ -1,8 +1,8 @@
 #include <catch.hpp>
 #include "../q2/queue.h"
 
-TEST_CASE("Queue_push_one") {
-    VectorQueue<int> queue;
+TEST_CASE("CircularQueue_push_one") {
+    VectorQueue<int> queue(true);
     REQUIRE(queue.IsEmpty());
     queue.Push(1);
     REQUIRE_FALSE(queue.IsEmpty());
@@ -17,8 +17,8 @@ TEST_CASE("Queue_push_one") {
     REQUIRE(queue.IsEmpty());
 }
 
-TEST_CASE("Queue__IsPacked") {
-    VectorQueue<char> queue;
+TEST_CASE("CircularQueue__IsPacked") {
+    VectorQueue<char> queue(true);
     REQUIRE(queue.GetVectorSize() == queue.Count());
     queue.Push('a');
     queue.Push('b');
@@ -27,8 +27,8 @@ TEST_CASE("Queue__IsPacked") {
     REQUIRE_FALSE(queue.GetVectorSize() == queue.Count());
 }
 
-TEST_CASE("Queue_Clear") {
-    VectorQueue<char> queue;
+TEST_CASE("CircularQueue_Clear") {
+    VectorQueue<char> queue(true);
     queue.Push('a');
     queue.Push('b');
     queue.Push('c');
@@ -36,8 +36,8 @@ TEST_CASE("Queue_Clear") {
     REQUIRE(queue.IsEmpty());
 }
 
-TEST_CASE("Queue_push_two") {
-    VectorQueue<int> queue;
+TEST_CASE("CircularQueue_push_two") {
+    VectorQueue<int> queue(true);
     queue.Push(1);
     queue.Push(2);
     queue.Push(3);
@@ -53,8 +53,8 @@ TEST_CASE("Queue_push_two") {
     REQUIRE_FALSE(popped);
 }
 
-TEST_CASE("Queue_pop") {
-    VectorQueue<char> q;
+TEST_CASE("CircularQueue_pop") {
+    VectorQueue<char> q(true);
     q.Push('a');
     REQUIRE(q.Pop());
     REQUIRE(q.IsEmpty());
@@ -62,8 +62,8 @@ TEST_CASE("Queue_pop") {
 
 }
 
-TEST_CASE("Queue_CopyToVector") {
-    VectorQueue<int> queue;
+TEST_CASE("CircularQueue_CopyToVector") {
+    VectorQueue<int> queue(true);
     queue.Push(1);
     queue.Push(2);
     queue.Push(3);
@@ -73,8 +73,8 @@ TEST_CASE("Queue_CopyToVector") {
     REQUIRE(expected == actual);
 }
 
-TEST_CASE("Queue_useUnusedSlots") {
-    VectorQueue<char> queue;
+TEST_CASE("CircularQueue_useUnusedSlots") {
+    VectorQueue<char> queue(true);
     queue.Push('a');
     queue.Push('b');                    // a b
     REQUIRE(2 == queue.Count());
@@ -85,20 +85,20 @@ TEST_CASE("Queue_useUnusedSlots") {
     queue.Push('c');                    // c b
     expected = {'b', 'c'};
     REQUIRE(expected == queue.CopyToVector());
-    REQUIRE(3 == queue.GetVectorSize());
+    REQUIRE(2 == queue.GetVectorSize());
     REQUIRE(2 == queue.Count());
     REQUIRE('b' == queue.Dequeue());           // c _
     REQUIRE(1 == queue.Count());
     queue.Push('d');                    // c d
-    REQUIRE(4 == queue.GetVectorSize());
+    REQUIRE(2 == queue.GetVectorSize());
     REQUIRE(2 == queue.Count());
     REQUIRE('c' == queue.Dequeue());           // _ d
     REQUIRE(1 == queue.Count());
     queue.Push('e');                    // e d
-    REQUIRE(5 == queue.GetVectorSize());
+    REQUIRE(2 == queue.GetVectorSize());
     queue.Push('f');
     expected = {'d', 'e', 'f'};
     std::vector<char> actual = queue.CopyToVector();
     REQUIRE(expected == actual);
-    REQUIRE(6 == queue.GetVectorSize());
+    REQUIRE(3 == queue.GetVectorSize());
 }

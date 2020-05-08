@@ -8,19 +8,29 @@ const size_t VECTOR_QUEUE_RESET_CAPACITY = 10;
 
 /**
  * Queue implementation that uses a vector to store elements.
- * This is a "circular array" implementation, in the Weiss terminology.
+ * If you know you will have about the same number of enqueues as dequeues,
+ * you can specify in the constructor that a "circular array" implementation
+ * will be used. The benefit of the circular implementation is that if the
+ * underlying vector has space for new elements, it is used most efficiently.
+ * The drawback is that an insert can take O(n) time if the underlying vector
+ * is full. ("Full" means that the size of the queue equals the size of the
+ * underlying vector.)
  * @tparam T element type
  */
 template<class T>
 class VectorQueue {
 public:
-    /**
-     * Constructs an instance.
-     */
-    VectorQueue() : elements_(), front_(0), back_(0), count_(0) {}
+
+    VectorQueue(bool circular) : circular_(circular), elements_(), front_(0), back_(0), count_(0) {}
+
+    VectorQueue() : VectorQueue(false) {}
 
     /**
-     * Adds an element to the back of the queue.
+     * Adds an element to the back of the queue. In the noncircular implementation,
+     * this always adds an element to the vector. In the circular implementation,
+     * if there is space vacated by previously dequeued elements, then that space
+     * is used; otherwise the ordering of the elements in the underlying vector is
+     * normalized and the new element is appended.
      * @param element element
      */
     void Push(const T& element);
@@ -64,6 +74,7 @@ public:
     size_t Count() const;
 
 private:
+    bool circular_;
     std::vector<T> elements_;
     size_t front_;
     size_t back_;
@@ -92,14 +103,18 @@ public: // stage: cut
 
 template<class T>
 void VectorQueue<T>::Push(const T &element) {
-    if (GetVectorSize() == count_) {
-        NormalizeOrder();
-        elements_.push_back(element);
-    } else {
-        if (back_ == elements_.size()) {
-            back_ = 0;
+    if (circular_) {
+        if (GetVectorSize() == count_) {
+            NormalizeOrder();
+            elements_.push_back(element);
+        } else {
+            if (back_ == elements_.size()) {
+                back_ = 0;
+            }
+            elements_[back_] = element;
         }
-        elements_[back_] = element;
+    } else {
+        elements_.push_back(element);
     }
     back_ = (back_ + 1) % elements_.size();
     count_++;
@@ -145,7 +160,7 @@ std::vector<T> VectorQueue<T>::CopyToVector() const {
     for (size_t index = front_; index < elements_.size(); index++) {
         copy.push_back(elements_[index]);
     }
-    if (back_ <= front_) {
+    if (circular_ && back_ <= front_) {
         for (size_t index = 0; index < back_; index++) {
             copy.push_back(elements_[index]);
         }

@@ -4,6 +4,7 @@ add_executable(hw16_testsNew
         ../q1/main.cpp
         stack_tests.cpp
         queue_tests.cpp
+        circular_queue_tests.cpp
         q1_tests.cpp
         tests_main.cpp
 )
