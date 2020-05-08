@@ -102,11 +102,13 @@ void VectorQueue<T>::Push(const T &element) {
     if (IsPacked()) {
         NormalizeOrder();
         elements_.push_back(element);
-        last_++;
     } else {
-        elements_[last_ % elements_.size()] = element;
-        last_ = (last_ + 1) % elements_.size();
+        if (last_ == elements_.size()) {
+            last_ = 0;
+        }
+        elements_[last_] = element;
     }
+    last_ = (last_ + 1) % elements_.size();
     count_++;
 }
 
